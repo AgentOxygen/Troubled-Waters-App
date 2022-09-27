@@ -1,0 +1,41 @@
+body {
+	box-sizing: border-box;
+    position: relative;
+    min-height: 100vh;
+    background-color: #fff;
+    background-color: var(--bg-color);
+    color: #000;
+    color: var(--text-color);
+    font-family: UCSMercury,mercury ssm a,mercury ssm b,Georgia,serif;
+    line-height: 1.6;
+}
+#map { 
+	height: 800px; 
+	width: 700px; 
+}
+.btn {
+    border-radius: 0;
+    border: 1px solid #000;
+    border: 1px solid var(--text-color);
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+    transition-property: color,background-color;
+    transition-duration: .3s;
+    transition-duration: var(--duration);
+    padding: 0.25em 0.5em;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: baseline;
+    background: #fff;
+    background: var(--bg-color);
+    color: #000;
+    color: var(--text-color);
+    text-transform: uppercase;
+    font-family: UCSGotham,gotham ssm a,gotham ssm b,trebuchet ms,sans-serif;
+    font-weight: 700;
+    font-size: .75rem;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
