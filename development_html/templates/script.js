@@ -176,7 +176,7 @@ map.on('load', function () {
         'layout': {'visibility': 'visible'},
         'paint': {
             'fill-color': ['get', 'color'],
-            'fill-opacity': ['case', ['boolean', ['get', 'nan'], false], 0, 1 ]
+            'fill-opacity': ['case', ['boolean', ['get', 'nan'], false], 0, 0.7 ]
         }
     });
     // map.addLayer({
