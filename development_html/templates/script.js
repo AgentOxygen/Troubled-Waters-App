@@ -163,6 +163,33 @@ function updateInfo() {
 /* ===================================== Mapbox API ===================================== */
 
 map.on('load', function () {
+    //
+    map.addSource('frac_extreme_RCP85', {
+        type: 'geojson',
+        data: domain + "download/geojson/frac_extreme_RCP85.geojson",
+        generateId: true
+        });
+    map.addLayer({
+        'id': 'frac_extreme_RCP85-fills',
+        'type': 'fill',
+        'source': 'frac_extreme_RCP85',
+        'layout': {'visibility': 'visible'},
+        'paint': {
+            'fill-color': ['get', 'color'],
+            'fill-opacity': ['case', ['boolean', ['get', 'nan'], false], 0, 1 ]
+        }
+    });
+    // map.addLayer({
+    //     'id': 'frac_extreme_RCP85-borders',
+    //     'type': 'line',
+    //     'source': 'frac_extreme_RCP85',
+    //     'layout': {'visibility': 'visible'},
+    //     'paint': {
+    //         'line-color': ['get', 'color'],
+    //         'line-width': 2
+    //     }
+    // });
+
 
     // ================== Groundwater Basin data, layers (fill and borders), and mouse functions ==================
     map.addSource('CA_Bulletin_118_Groundwater_Basins', {

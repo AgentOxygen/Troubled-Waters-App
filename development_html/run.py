@@ -6,7 +6,7 @@ Updated 3/4/21
 @author: Cameron Cummins
 """
 
-from flask import Flask, render_template, send_from_directory, request
+from flask import Flask, render_template, send_file, send_from_directory, request
 from os.path import join, isfile
 from os import listdir
 #import redis
@@ -28,8 +28,8 @@ data_dir = app.root_path + "/data/json_data/"
 # For downloading entire files within the flask directories (such as JSON or Shapefile)
 @app.route('/download/<path:path>', methods=['GET', 'POST'])
 def download(path):
-    directory, filename = path.split("/")
-    return send_from_directory(directory, filename)
+    # path_parts = path.split("/")
+    return send_file(path) # send_from_directory(directory, filename)
 
 # A basic data request that grabs key-values from the redis server using the filters specified by paramters
 @app.route('/data/<key>')
