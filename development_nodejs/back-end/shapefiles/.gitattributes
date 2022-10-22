@@ -1,5 +1,0 @@
-WBD_USGS_HUC10_CA.shp filter=lfs diff=lfs merge=lfs -text
-CA_Bulletin_118_Groundwater_Basins.shp filter=lfs diff=lfs merge=lfs -text
-CA_Counties_TIGER2016.shp filter=lfs diff=lfs merge=lfs -text
-CA_Places_TIGER2016.shp filter=lfs diff=lfs merge=lfs -text
-CA_State_TIGER2016.shp filter=lfs diff=lfs merge=lfs -text
