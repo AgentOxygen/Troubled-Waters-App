@@ -76,6 +76,10 @@ function setRCP45() {
     console.log("Switching to RCP 4.5")
     document.getElementById('rcp85-checkbox').checked = false;
     current_rcp = "RCP45";
+    try{
+        map.setLayoutProperty(`${current_metric}_RCP85-fills`, 'visibility', 'none');
+        map.setLayoutProperty(`${current_metric}_RCP45-fills`, 'visibility', 'visible');
+    }catch(error){}
     updateDataset(current_metric, current_rcp, current_region_group, current_info_data);
 }
 
@@ -85,6 +89,10 @@ function setRCP85() {
     console.log("Switching to RCP 8.5")
     document.getElementById('rcp45-checkbox').checked = false;
     current_rcp = "RCP85";
+    try{
+        map.setLayoutProperty(`${current_metric}_RCP45-fills`, 'visibility', 'none');
+        map.setLayoutProperty(`${current_metric}_RCP85-fills`, 'visibility', 'visible');
+    }catch(error){}
     updateDataset(current_metric, current_rcp, current_region_group, current_info_data);
 }
 
@@ -104,9 +112,14 @@ function displayModelsPane() {
 // Initiates information update with metric selection and shifts focus back to primary pane
 function buttonChangeMetric(metric){
     focusOnPane("primary-pane");
+    try{
+        map.setLayoutProperty(`${current_metric}_${current_rcp}-fills`, 'visibility', 'none');
+        map.setLayoutProperty(`${metric}_${current_rcp}-fills`, 'visibility', 'visible');
+    }catch(error){}
     document.getElementById(current_metric + '-button').disabled = false;
     document.getElementById(metric + '-button').disabled = true;
     current_metric = metric;
+
     updateDataset(current_metric, current_rcp, current_region_group, current_info_data);
 }
 
@@ -163,33 +176,30 @@ function updateInfo() {
 /* ===================================== Mapbox API ===================================== */
 
 map.on('load', function () {
-    //
-    map.addSource('frac_extreme_RCP85', {
-        type: 'geojson',
-        data: domain + "download/geojson/frac_extreme_RCP85.geojson",
-        generateId: true
-        });
-    map.addLayer({
-        'id': 'frac_extreme_RCP85-fills',
-        'type': 'fill',
-        'source': 'frac_extreme_RCP85',
-        'layout': {'visibility': 'visible'},
-        'paint': {
-            'fill-color': ['get', 'color'],
-            'fill-opacity': ['case', ['boolean', ['get', 'nan'], false], 0, 0.7 ]
-        }
-    });
-    // map.addLayer({
-    //     'id': 'frac_extreme_RCP85-borders',
-    //     'type': 'line',
-    //     'source': 'frac_extreme_RCP85',
-    //     'layout': {'visibility': 'visible'},
-    //     'paint': {
-    //         'line-color': ['get', 'color'],
-    //         'line-width': 2
-    //     }
-    // });
 
+    var variable_geojson_list = [
+        "frac_extreme_RCP45", "max_threeday_precip_RCP45", "nov_mar_percent_RCP45", "rainfall_ratio_RCP45", 
+        "num_ros_events_RCP45", "norm_rain_on_snow_RCP45", "SWE_total_RCP45", "et_RCP45", "frac_extreme_RCP85", 
+        "max_threeday_precip_RCP85", "nov_mar_percent_RCP85", "rainfall_ratio_RCP85", 
+        "num_ros_events_RCP85", "norm_rain_on_snow_RCP85", "SWE_total_RCP85", "et_RCP85"];
+
+    for (const variable_geojson of variable_geojson_list) {
+        map.addSource(variable_geojson, {
+            type: 'geojson',
+            data: domain + `download/geojson/${variable_geojson}.geojson`,
+            generateId: true
+            });
+        map.addLayer({
+            'id': `${variable_geojson}-fills`,
+            'type': 'fill',
+            'source': variable_geojson,
+            'layout': {'visibility': 'none'},
+            'paint': {
+                'fill-color': ['get', 'color'],
+                'fill-opacity': ['case', ['boolean', ['get', 'nan'], false], 0, 1 ]
+            }
+        });
+    }
 
     // ================== Groundwater Basin data, layers (fill and borders), and mouse functions ==================
     map.addSource('CA_Bulletin_118_Groundwater_Basins', {
