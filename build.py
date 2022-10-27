@@ -16,7 +16,7 @@ REGION_DATA_OUTPUT_DIR = "../troubled_waters_data/output_region_netcdf/"
 metrics = ['frac_extreme', 'max_threeday_precip', 'nov_mar_percent',
             'rainfall_ratio', 'num_ros_events', 'norm_rain_on_snow',
             'SWE_total', 'et']
-SHPFILE_DIR = "../troubled_waters_data/shapefiles/original/"
+SHPFILE_DIR = "../troubled_waters_data/shapefiles/"
 hist_suffix = '_now'
 
         
