@@ -254,10 +254,6 @@ def maskToWBD(input_path):
     ds.to_netcdf(output_path)
 
 
-for rcp in ["RCP85", "RCP45"]:
-    for met_index, metric in enumerate(metrics):
-        
-
 if __name__ =="__main__":
     print("Creating ratio netCDFs")
     for rcp in ["RCP85", "RCP45"]:
