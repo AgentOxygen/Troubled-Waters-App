@@ -18,25 +18,12 @@ norms = [Normalize(vmin=-20, vmax=20), Normalize(vmin=-100, vmax=100), Normalize
         Normalize(vmin=-100, vmax=100), Normalize(vmin=-100, vmax=100), Normalize(vmin=-50, vmax=50),
         Normalize(vmin=-100, vmax=100), Normalize(vmin=-50, vmax=50)]
 
-def preprocess_metric(metric_ds):
-    # Interpolate to a higher resolution
-    new_lat = np.linspace(metric_ds.lat[0], metric_ds.lat[-1], metric_ds.lat.size*8)
-    new_lon = np.linspace(metric_ds.lon[0], metric_ds.lon[-1], metric_ds.lon.size*8)
-    metric_ds = metric_ds.interp(lat=new_lat, lon=new_lon)
-    # Adjust coordinates to match the shapefile coordinates
-    metric_ds = metric_ds.assign_coords(lon=(((metric_ds.lon + 180) % 360) - 180)).sortby('lon')
-    # Set spatial dimensions for data
-    metric_ds.rio.set_spatial_dims(x_dim='lon', y_dim='lat', inplace=True)
-    # Specify CRS projection to match shapefile data
-    metric_ds.rio.write_crs("epsg:4326", inplace=True)
-    return metric_ds
-
 metric_means = {}
 
 for rcp in ["RCP85", "RCP45"]:
     for met_index, metric in enumerate(metrics):
         print(f"{metric}_{rcp}")
-        metric_ds = xarray.open_dataset(f"{DATA_OUTPUT_DIR}{metric}_{rcp}.nc")
+        metric_ds = xarray.open_dataset(f"{DATA_OUTPUT_DIR}{metric}_{rcp}.nc")*100
         model_mean = metric_ds.to_array(dim='tmp').mean('tmp')
         model_mean = model_mean.where(model_mean != np.nan)
         new_lat = np.linspace(model_mean.lat[0], model_mean.lat[-1], model_mean.lat.size*2)
