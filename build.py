@@ -7,7 +7,7 @@ import geopandas
 import rioxarray
 from shapely.geometry import mapping, Polygon
 import warnings
-import threading
+from multiprocessing import Process
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 DATA_DIR = "../troubled_waters_data/netcdf/"
@@ -267,16 +267,16 @@ if __name__ =="__main__":
     
     print(f"Creating multithreaded regional data")
     for met_index, metric in enumerate(metrics):
-        print(f"{metric} ", end="")
-        t1 = threading.Thread(target=maskToGroundwaterBasins, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_GWB.nc",))
-        t2 = threading.Thread(target=maskToCounties, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_COUNTIES.nc",))
-        t3 = threading.Thread(target=maskToPlaces, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_PLACES.nc",))
-        t4 = threading.Thread(target=maskToWBD, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_WBD.nc",))
+        print(f"{metric}")
+        t1 = Process(target=maskToGroundwaterBasins, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_GWB.nc",))
+        t2 = Process(target=maskToCounties, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_COUNTIES.nc",))
+        t3 = Process(target=maskToPlaces, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_PLACES.nc",))
+        t4 = Process(target=maskToWBD, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP45.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP45_WBD.nc",))
         
-        t5 = threading.Thread(target=maskToGroundwaterBasins, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_GWB.nc",))
-        t6 = threading.Thread(target=maskToCounties, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_COUNTIES.nc",))
-        t7 = threading.Thread(target=maskToPlaces, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_PLACES.nc",))
-        t8 = threading.Thread(target=maskToWBD, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_WBD.nc",))
+        t5 = Process(target=maskToGroundwaterBasins, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_GWB.nc",))
+        t6 = Process(target=maskToCounties, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_COUNTIES.nc",))
+        t7 = Process(target=maskToPlaces, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_PLACES.nc",))
+        t8 = Process(target=maskToWBD, args=(f"{DATA_OUTPUT_DIR}{metric}_RCP85.nc", f"{REGION_DATA_OUTPUT_DIR}{metric}_RCP85_WBD.nc",))
         
         t1.start()
         t2.start()
