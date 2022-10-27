@@ -89,7 +89,7 @@ def maskToGroundwaterBasins(input_path, output_path):
     ds.to_netcdf(output_path)
 
 
-def maskToCounties(input_path):
+def maskToCounties(input_path, output_path):
     metric_ds = preprocess_metric(xarray.open_dataset(input_path))
     
     # Read ing shapefile
@@ -144,7 +144,7 @@ def maskToCounties(input_path):
     ds.to_netcdf(output_path)
 
 
-def maskToPlaces(input_path):
+def maskToPlaces(input_path, output_path):
     metric_ds = preprocess_metric(xarray.open_dataset(input_path))
     
     # Read ing shapefile
@@ -199,7 +199,7 @@ def maskToPlaces(input_path):
     ds.to_netcdf(output_path)
 
 
-def maskToWBD(input_path):
+def maskToWBD(input_path, output_path):
     metric_ds = preprocess_metric(xarray.open_dataset(input_path))
     
     # Read ing shapefile
