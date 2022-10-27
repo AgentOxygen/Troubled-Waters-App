@@ -35,7 +35,7 @@ metric_means = {}
 
 for rcp in ["RCP85", "RCP45"]:
     for met_index, metric in enumerate(metrics):
-        print({metric}_{rcp})
+        print(f"{metric}_{rcp}")
         metric_ds = xarray.open_dataset(f"{DATA_OUTPUT_DIR}{metric}_{rcp}.nc")
         model_mean = metric_ds.to_array(dim='tmp').mean('tmp')
         model_mean = model_mean.where(model_mean != np.nan)
