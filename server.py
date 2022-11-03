@@ -1,13 +1,22 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from datetime import date
 import json
 import xarray
+
+# Temporary solution for CORS
+from flask_cors import CORS, cross_origin
+app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 app = Flask(__name__)
 
 
 # Load data
 REGION_DATA_OUTPUT_DIR = "../troubled_waters_data/output_region_netcdf/"
+MEAN_IMG_DIR = "../troubled_waters_data/model_mean_imgs/"
+CB_IMG_DIR = "../troubled_waters_data/colorbars/"
 metrics = ['frac_extreme', 'max_threeday_precip', 'nov_mar_percent',
             'rainfall_ratio', 'num_ros_events', 'norm_rain_on_snow',
             'SWE_total', 'et']
@@ -27,7 +36,8 @@ def hello_world():
     return f"UT-UCS Troubled Waters back-end Flask server: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
 
 
-@app.route("/get_region_info")
+@app.route("/get_region_info", methods=['GET'])
+@cross_origin()
 def getRegionInfo():
     """
     Returns model info on a particular region
@@ -49,7 +59,7 @@ def getRegionInfo():
     return json.dumps(reg_info)
 
 
-@app.route("/get_region_map")
+@app.route("/get_region_map", methods=['GET'])
 def getRegionDatasetInfo():
     """
     Returns coordinate and dimension info on a particular dataset of regions
@@ -66,7 +76,8 @@ def getRegionDatasetInfo():
     return ds_info
 
 
-@app.route("/formatted/region_dropdowns")
+@app.route("/formatted/region_dropdowns", methods=['GET'])
+@cross_origin()
 def formattedRegionDropdowns():
     """
     Returns formatted HTML code for filling the region dropdowns
@@ -82,6 +93,24 @@ def formattedRegionDropdowns():
         fstr = f'''<a id="{elmt_id}" onclick="changeRegion('{elmt_id}', '{dataset}', '{str(ds["label"].values)}', '{reg_name}')" class="dropdown-item" href="#">{reg_name}</a>'''
         ret_str += fstr
     return ret_str
+
+
+@app.route('/get_raster_img', methods=['GET'])
+def getRasterImage():
+    name = request.args.get('name')
+    path = f"{MEAN_IMG_DIR}{name}.png"
+    response = send_file(path, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/get_colorbar_img', methods=['GET'])
+def getCBImage():
+    name = request.args.get('name')
+    path = f"{CB_IMG_DIR}{name}.png"
+    response = send_file(path, mimetype='image/png')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 if __name__ == "__main__":
