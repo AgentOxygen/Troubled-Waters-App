@@ -23,6 +23,19 @@
 			height: 20vh;
 			overflow: auto;
 		}
+		.row.row-no-margin {
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+
+		.col-no-padding {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+		}
+		.info-header {
+			white-space:nowrap;
+			font-weight: bold;
+		}
 	</style>
   </head>
   <body>
@@ -30,47 +43,47 @@
 	<div class="metric_grid text-center" id="metric_selection">
 		<div class="row align-items-start metric-row-margin">
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/frac_extreme.png" alt="Δ Fraction of Yearly Precipitation on Extreme Days">
+				<a class="metric" href="#" onclick="switchToMapAndControls('frac_extreme')">
+					<img id="frac_extreme" class="img-thumbnail" src="images/frac_extreme.png" alt="Δ Fraction of Yearly Precipitation on Extreme Days">
 				</a>
 			</div>
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/max_threeday_precip.png" alt="Δ Maximum Three-day Precipitation">
+				<a class="metric" href="#" onclick="switchToMapAndControls('max_threeday_precip')">
+					<img id="max_threeday_precip" class="img-thumbnail" src="images/max_threeday_precip.png" alt="Δ Maximum Three-day Precipitation">
 				</a>
 			</div>
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/nov_mar_percent.png" alt="Δ Fraction of Yearly Precipitation between November-March">
+				<a class="metric" href="#" onclick="switchToMapAndControls('nov_mar_percent')">
+					<img id="nov_mar_percent" class="img-thumbnail" src="images/nov_mar_percent.png" alt="Δ Fraction of Yearly Precipitation between November-March">
 				</a>
 			</div>
 		</div>
 		<div class="row align-items-center metric-row-margin">
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/rainfall_ratio.png" alt="Δ Ratio of Yearly Precipitation as Rain vs Snow">
+				<a class="metric" href="#" onclick="switchToMapAndControls('rainfall_ratio')">
+					<img id="rainfall_ratio" class="img-thumbnail" src="images/rainfall_ratio.png" alt="Δ Ratio of Yearly Precipitation as Rain vs Snow">
 				</a>
 			</div>
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/num_ros_events.png" alt="Δ Number of Rain-On-Snow Days">
+				<a class="metric" href="#" onclick="switchToMapAndControls('num_ros_events')">
+					<img id="num_ros_events" class="img-thumbnail" src="images/num_ros_events.png" alt="Δ Number of Rain-On-Snow Days">
 				</a>
 			</div>
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/norm_rain_on_snow.png" alt="Δ Normalized Number of Rain-On-Snow Days">
+				<a class="metric" href="#" onclick="switchToMapAndControls('norm_rain_on_snow')">
+					<img id="norm_rain_on_snow" class="img-thumbnail" src="images/norm_rain_on_snow.png" alt="Δ Normalized Number of Rain-On-Snow Days">
 				</a>
 			</div>
 		</div>
 		<div class="row align-items-end metric-row-margin">
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/SWE_total.png" alt="Δ Cumulative Snow Water Equivalent">
+				<a class="metric" href="#" onclick="switchToMapAndControls('SWE_total')">
+					<img id="SWE_total" class="img-thumbnail" src="images/SWE_total.png" alt="Δ Cumulative Snow Water Equivalent">
 				</a>
 			</div>
 			<div class="col">
-				<a class="metric" href="#" onclick="switchToMapAndControls('')">
-					<img class="img-thumbnail" src="images/et.png" alt="Δ Evapotranspiration">
+				<a class="metric" href="#" onclick="switchToMapAndControls('et')">
+					<img id="et" class="img-thumbnail" src="images/et.png" alt="Δ Evapotranspiration">
 				</a>
 			</div>
 		</div>
@@ -78,11 +91,18 @@
 	
 	<button id="back_to_metric_sel_btn" type="button" class="btn btn-primary" onclick="switchToMetricSelection()" style="display:none">←Back to Metric Selection</button>
 	
-	<div class="container" style="display:none" id="map_and_controls">
+	<div class="container" id="map_and_controls">
 		<div class="row">
 			<div class="col">
-				<!-- Mapbox tag !-->
-				<div id='map' style='width: 40vw; height: 60vh;'></div>
+				<div class="row row-no-margin">
+					<div class="col-xs-12 col-sm-6 col-no-padding">
+						<!-- Mapbox tag !-->
+						<div id='map' style='width: 40vw; height: 60vh'></div>
+					</div>
+					<div class="col-xs-12 col-sm-6 col-no-padding">
+						<img id="colorbar" src="" class="img-fluid" style='height: 60vh' alt="Map colorbar">
+					</div>
+				</div>
 			</div>
 			<div class="col">
 				<div class="card p-3 m-2">
@@ -90,19 +110,19 @@
 						<div class="btn-group btn-group-toggle" data-toggle="buttons">
 							<div class="btn-group me-2" role="group" aria-label="Shapefile Buttons">
 								<div class="btn-group">
+									<button id="shp_california" type="button" class="btn btn-outline-primary" onclick="changeRegion('shp_california', 'shp_california', 'california', 'California')">
+										<span class="sr-only">California</span>
+									</button>
+								</div>
+								<div class="btn-group">
 									<button id="shp_gwbasins" type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 										<span class="sr-only">Groundwater Basins</span>
 									</button>
 									<div class="dropdown-menu" id="drpdwn_gw">
-										<!-- Create python function to populate these dynamically !-->
-										<div class="regions_dropdown">
-											<a id="reg_basin1" onclick="changeRegion('reg_basin1', 'shp_gwbasins', 'Groundwater Basins', 'Basin 1')" class="dropdown-item" href="#">Basin 1</a>
-											<a id="reg_basin2" onclick="changeRegion('reg_basin2', 'shp_gwbasins', 'Groundwater Basins', 'Basin 2')" class="dropdown-item" href="#">Basin 2</a>
-											<a id="reg_basin3" onclick="changeRegion('reg_basin3', 'shp_gwbasins', 'Groundwater Basins', 'Basin 3')" class="dropdown-item" href="#">Basin 3</a>
-										</div>
+										<!-- Server function to populate these dynamically !-->
+										<div id="gw_dropdown_menu" class="regions_dropdown"></div>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item" href="#">All Basins</a>
-										<!-- End of python function content !-->
 									</div>
 								</div>
 								<div class="btn-group">
@@ -110,10 +130,8 @@
 										<span class="sr-only">Watersheds</span>
 									</button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">Watershed 1</a>
-										<a class="dropdown-item" href="#">Watershed 2</a>
-										<a class="dropdown-item" href="#">Watershed 3</a>
-									<div class="dropdown-divider"></div>
+										<div id="ws_dropdown_menu" class="regions_dropdown"></div>
+										<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#">All Watersheds</a>
 									</div>
 								</div>
@@ -122,11 +140,9 @@
 										<span class="sr-only">Counties</span>
 									</button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">County 1</a>
-										<a class="dropdown-item" href="#">County 2</a>
-										<a class="dropdown-item" href="#">County 3</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#">All Counties</a>
+										<div id="counties_dropdown_menu" class="regions_dropdown"></div>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">All Counties</a>
 									</div>
 								</div>
 								<div class="btn-group">
@@ -134,11 +150,9 @@
 										<span class="sr-only">Places</span>
 									</button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" href="#">Place 1</a>
-										<a class="dropdown-item" href="#">Place 2</a>
-										<a class="dropdown-item" href="#">Place 3</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#">All Places</a>
+										<div id="places_dropdown_menu" class="regions_dropdown"></div>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">All Places</a>
 									</div>
 								</div>
 							</div>
@@ -154,23 +168,33 @@
 							</div>
 						</div>
 					</div>
-					<div class="row" id="info_row">
-						<div class="col">
-							<h2>Region Name</h2></br>
-							Average metric value</br>
-							Standard Deviation of metric value </br>
-							Model Agreement Median</br>
-							Model Agreement Mode</br>
-							Rasterized Image of region with overlayed metric value</br>
-							Rasterized Image of region with overlayed agreement</br>
+					<div class="row" id="info_row" style="p-3">
+						<div id="display_card" class="card">
+							<p>
+							<span id="metric_name_display" class="info-header"></span> for <span id="region_name_display" class="info-header"></span> under the <span id="rcp_display" class="info-header"></span> Scenario
+							</p>
 						</div>
 						<div class="col">
-							<h2>Metric Name</h2></br>
-							California Average metric value</br>
-							California Standard Deviation metric value</br>
-							Historical metric value</br>
-							Future metric value</br>
-							Rasterized Image of figure from paper</br>
+							<div id="model_agreement_info" class="row">
+								agreement info
+							</div>
+							<div id="model_value_info" class="row">
+								value info
+							</div>
+							<div id="model_list_info" class="row">
+								model list info
+							</div>
+						</div>
+						<div class="col">
+							<div id="cali_model_agreement_info" class="row">
+								whole state agreement
+							</div>
+							<div id="cali_model_value_info" class="row">
+								whole state value
+							</div>
+							<div id="cali_model_list_info" class="row">
+								whole state model info
+							</div>
 						</div>
 					</div>
 				</div>
@@ -191,20 +215,114 @@
 	<script type="application/javascript">
 		server_link = "http://localhost:8000/"
 	
-		metric = "";
+		metric = "et";
 		rcp = 85;
 		region = "";
+		shp_file = "";
+		dataset_labels_name = "";
 		
 		active_btnID = "";
 		active_btngrpID = "";
 		
+		/**===================== MapBox API stuff ===================== **/
+		// Load the map
+		mapboxgl.accessToken = 'pk.eyJ1Ijoib3h5Z2VuMSIsImEiOiJja25jMmh3b28wenFlMnFvaGowN3B6bmc1In0.MKaFBCRkpp4gZWA3hIT-iA';
+		const map = new mapboxgl.Map({
+			container: 'map', // container ID
+			// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+			style: 'mapbox://styles/mapbox/light-v10',
+			center: [-122.486052, 37.830348],
+			zoom: 4.9
+		});
+		
+		function getColorbarImgURL(){
+			return `${server_link}get_colorbar_img?name=${metric}`
+		}
+		
+		function getOverlayImgURL(){
+			return `${server_link}get_raster_img?name=${metric}_RCP${rcp}`
+		}
+		
+		function getOverlayImgDict(){
+			data = {
+				'type': 'image',
+				'url': getOverlayImgURL(),
+				'coordinates': [
+					// Top Left, Top Right, Bottom Right, Bottom Left
+					[-124.63125, 43.63875],[-113.30625, 43.63875],[-113.30625, 31.36375],[-124.63125, 31.36375]
+			]}
+			return data;
+		}
+		
+		// Add metric overlay, update source to change which overlay
+		map.on('load', () => {
+			map.addSource('metric_overlay', getOverlayImgDict());
+			map.addLayer({
+				id: 'metric_overlay-layer',
+				'type': 'raster',
+				'source': 'metric_overlay',
+				'paint': {
+					'raster-fade-duration': 0,
+					'raster-opacity': 0.8
+				}
+			});
+		});
+		
+		/**================ End of Mapbox API Stuff ================**/
+		// Populate the drop-downs
+		fetch(`${server_link}/formatted/region_dropdowns?ds=frac_extreme_RCP45_GWB&lvar=basin_name`)
+			.then((response) => {
+				return response.text();
+			}).then(function (html) {
+				document.getElementById("gw_dropdown_menu").innerHTML = html;
+			});
+		fetch(`${server_link}/formatted/region_dropdowns?ds=frac_extreme_RCP45_WBD&lvar=wbd_name`)
+			.then((response) => {
+				return response.text();
+			}).then(function (html) {
+				document.getElementById("ws_dropdown_menu").innerHTML = html;
+			});
+		fetch(`${server_link}/formatted/region_dropdowns?ds=frac_extreme_RCP45_COUNTIES&lvar=county_name`)
+			.then((response) => {
+				return response.text();
+			}).then(function (html) {
+				document.getElementById("counties_dropdown_menu").innerHTML = html;
+			});
+		fetch(`${server_link}/formatted/region_dropdowns?ds=frac_extreme_RCP45_PLACES&lvar=place_name`)
+			.then((response) => {
+				return response.text();
+			}).then(function (html) {
+				document.getElementById("places_dropdown_menu").innerHTML = html;
+			});
+		
 		function switchRCP(rcpNumber){
 			console.log("Switching to RCP " + rcpNumber.toString());
 			rcp = rcpNumber;
+			// Update raster overlay
+			map.getSource('metric_overlay').updateImage(getOverlayImgDict());
+			// Update colorbar
+			document.getElementById("colorbar").src = getColorbarImgURL();
+			// Update display
+			if (rcp == 85){
+				document.getElementById("rcp_display").innerHTML = "High Emissions (RCP 8.5)";
+			} else {
+				document.getElementById("rcp_display").innerHTML = "Medium Emissions (RCP 4.5)";
+			}
+			updateMetricInfo();
 		}
 		
 		function switchShapefile(shapefileName){
 			console.log("Switching to shapefile " + shapefileName);
+			shp_file = shapefileName;
+			if (shp_file = "GWB"){
+				dataset_labels_name = "basin_name";
+			}else if(shp_file = "WBD"){
+				dataset_labels_name = "wbd_name";
+			}else if(shp_file = "COUNTIES"){
+				dataset_labels_name = "counties_name";
+			}else if(shp_file = "PLACES"){
+				dataset_labels_name = "places_name";
+			}
 		}
 		
 		function changeRegion(btnID, btngrpID, shapefileName, regionName){
@@ -221,34 +339,49 @@
 			active_btngrpID = btngrpID;
 			$("#" + btnID).button('toggle');
 			$("#" + btngrpID).button('toggle');
-			
+			// Update region display
+			document.getElementById("region_name_display").innerHTML = regionName;
+			updateMetricInfo();
 		}
 		
 		function switchToMapAndControls(selected_metric){
 			metric = selected_metric;
 			console.log("Hiding metric selection and moving to map with metric=" + metric);
-			document.getElementById("metric_selection").style = "display:none";
-			document.getElementById("map_and_controls").style = "display:visible";
-			document.getElementById("back_to_metric_sel_btn").style = "display:visible";
+			// Updating group visibilities
+			document.getElementById("metric_selection").style.display = "none";
+			document.getElementById("map_and_controls").style.display = "block";
+			document.getElementById("back_to_metric_sel_btn").style.display = "block";
+			// Update raster overlay
+			map.getSource('metric_overlay').updateImage(getOverlayImgDict());
+			// Update colorbar
+			document.getElementById("colorbar").src = getColorbarImgURL();
+			// Update metric name display
+			document.getElementById("metric_name_display").innerHTML = document.getElementById(metric).alt;
+			updateMetricInfo();
 		}
 		
 		function switchToMetricSelection(){
 			console.log("Switching back to metric selection")
-			document.getElementById("metric_selection").style = "display:visible";
-			document.getElementById("map_and_controls").style = "display:none";
-			document.getElementById("back_to_metric_sel_btn").style = "display:none";
+			document.getElementById("metric_selection").style.display = "block";
+			document.getElementById("map_and_controls").style.display = "none";
+			document.getElementById("back_to_metric_sel_btn").style.display = "none";
 		}
 		
-		switchToMapAndControls("test");
-
-		mapboxgl.accessToken = 'pk.eyJ1Ijoib3h5Z2VuMSIsImEiOiJja25jMmh3b28wenFlMnFvaGowN3B6bmc1In0.MKaFBCRkpp4gZWA3hIT-iA';
-		const map = new mapboxgl.Map({
-			container: 'map', // container ID
-			// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-			style: 'mapbox://styles/mapbox/light-v10',
-			center: [-122.486052, 37.830348],
-			zoom: 4.9
+		function updateMetricInfo(){
+			fetch(`${server_link}/get_region_info?ds=${metric}_RCP${rcp}_${shp_file}&var=${dataset_labels_name}&var_key=${region}`).then((response) => {
+				return response.text();
+			}).then(function (json) {
+				console.log(json);
+			});
+		}
+		
+		// Load defaults
+		map.on('load', () => {
+			switchToMapAndControls("et");
+			changeRegion("shp_california", "shp_california", "california", "California");
+			switchRCP(85);
 		});
+		
 	</script>
   </body>
 </html>
